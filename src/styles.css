@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.wf-mplus1p { font-family: "M PLUS 1p"; }
