@@ -1,4 +1,3 @@
-// src/components/content.js
 import { FaPython, FaCuttlefish, FaReact, FaDocker, FaGithub } from 'react-icons/fa';
 import { SiNumpy, SiPytorch, SiTensorflow, SiFastapi, SiGo } from "react-icons/si";
 import { TbSql } from "react-icons/tb";
@@ -12,7 +11,7 @@ export default {
     intro: {
         avatar: ava,
         name: 'Taketsuna Ichiyanagi',
-        description: '農工大古宮研究室所属のM1。自然言語処理や視覚情報処理などの学際領域に対し、研究・実装の観点で興味がある。'
+        description: '農工大古宮研究室所属のM1(修士1年)。自然言語処理や視覚情報処理などの学際領域に対し、研究・実装の観点で興味がある。'
     },
     ownedSkills : [
         { icon: <FaCuttlefish />, label: 'C' },
@@ -43,7 +42,7 @@ export default {
         {
             period: '2025 - now',
             institution: '東京農工大学 先進学際科学府 先進学際科学専攻',
-            degree: "工学修士",
+            degree: "工学修士(見込)",
         },
     ],
     projects: [
@@ -64,6 +63,6 @@ export default {
         email: 'take523oliver@gmail.com',
         prompt: 'Interested in working together? …',
         wantedly: 'https://www.wantedly.com/id/t4k3',
-        github: 'https://github.com/Token-05',
+        github: 'https://github.com/icyng',
     },
 };
