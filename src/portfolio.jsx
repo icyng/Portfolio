@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-// eslint-disable-next-line no-unused-vars
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { MdNightsStay } from 'react-icons/md';
 import { IoSunny } from 'react-icons/io5';
 import { SiWantedly } from "react-icons/si";
@@ -17,11 +15,6 @@ export default function Portfolio() {
     const root = window.document.documentElement;
     darkMode ? root.classList.add('dark') : root.classList.remove('dark');
   }, [darkMode]);
-
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: i => ({ opacity: 1, y: 0, transition: { delay: i * 0.2 } }),
-  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-500 wf-mplus1p">
@@ -44,12 +37,8 @@ export default function Portfolio() {
       </div>
 
       {/* Hero */}
-      <motion.section
+      <section
         className="flex flex-col items-center justify-center h-screen px-6 text-center"
-        initial="hidden"
-        animate="visible"
-        custom={0}
-        variants={sectionVariants}
       >
         <h1 className="text-6xl font-bold mb-8 font-orbitron">
           {content.hero.name}
@@ -57,16 +46,12 @@ export default function Portfolio() {
         <p className="text-xl max-w-xl">
           {content.hero.tagline}
         </p>
-      </motion.section>
+      </section>
 
       {/* Intro Card */}
-      <motion.section
+      <section
         id="intro"
-        className="py-20 px-6 bg-gray-100 dark:bg-gray-800"
-        initial="hidden"
-        whileInView="visible"
-        custom={1}
-        variants={sectionVariants}
+        className="py-20 px-6 bg-gray-100 dark:bg-gray-800 mb-20"
       >
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center">
           <img
@@ -79,27 +64,22 @@ export default function Portfolio() {
             <p className="text-lg leading-relaxed">{content.intro.description}</p>
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Skills */}
-      <motion.section
+      <section
         id="skills"
         className="py-20 px-6"
-        initial="hidden"
-        whileInView="visible"
-        custom={2}
-        variants={sectionVariants}
       >
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-semibold mb-8 text-center border-b dark:border-gray-600 border-gray-300 pb-4">
             Skills
           </h2>
-
           <div className="mb-12">
             <h3 className="text-2xl font-medium mb-6">Owned</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {content.ownedSkills.map((skill, idx) => (
-                <motion.div
+                <div
                   key={idx}
                   className="flex flex-col items-center"
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -109,7 +89,7 @@ export default function Portfolio() {
                 >
                   <div className="text-7xl mb-2">{skill.icon}</div>
                   <p className="text-lg font-medium">{skill.label}</p>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -118,33 +98,28 @@ export default function Portfolio() {
             <h3 className="text-2xl font-medium mb-6">Learning</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {content.learningSkills.map((skill, idx) => (
-                <motion.div
+                <div
                   key={idx}
                   className="flex flex-col items-center"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1 }}
                 >
                   <div className="text-7xl mb-2">{skill.icon}</div>
                   <p className="text-lg font-medium">{skill.label}</p>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Education */}
-      <motion.section
+      <section
         id="career"
         className="py-20 px-6"
-        initial="hidden"
-        whileInView="visible"
-        variants={sectionVariants}
       >
-        <div className="max-w-3xl mx-auto relative py-20 px-6">
-          <h2 className="text-3xl font-semibold mb-12 text-center">Education</h2>
+        <div className="max-w-4xl mx-auto relative py-20 px-6">
+          <h2 className="text-3xl font-semibold mb-12 text-center border-b dark:border-gray-600 border-gray-300 pb-4">
+            Education
+          </h2>
           <div
             className="absolute left-15 w-1 bg-gray-500"
             style={{
@@ -154,13 +129,9 @@ export default function Portfolio() {
           ></div>
           <ul className="space-y-10 pl-8">
             {content.career.map((item, idx) => (
-              <motion.li
+              <li
                 key={idx}
                 className="relative flex items-start"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.2 }}
               >
                 <div
                   className="absolute h-5 w-5 rounded-full bg-gray-700 border-2 border-gray-300"
@@ -179,28 +150,24 @@ export default function Portfolio() {
                   </h3>
                   <p className="italic text-x text-gray-600 dark:text-gray-400">{item.degree}</p>
                 </div>
-              </motion.li>
+              </li>
             ))}
           </ul>
         </div>
-      </motion.section>
+      </section>
 
       {/* Projects */}
-      <motion.section
+      <section
         id="projects"
         className="py-20 px-6"
-        initial="hidden"
-        whileInView="visible"
-        custom={4}
-        variants={sectionVariants}
       >
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-semibold mb-10 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-semibold mb-10 text-center border-b dark:border-gray-600 border-gray-300 pb-4">
             Projects
           </h2>
           <div className="grid gap-8 md:grid-cols-2">
             {content.projects.map((proj, idx) => (
-              <motion.div
+              <div
                 key={idx}
                 whileHover={{ translateY: -5 }}
                 className="p-6 border dark:border-gray-600 border-gray-300 rounded-lg"
@@ -215,23 +182,21 @@ export default function Portfolio() {
                 <a href={proj.link} className="underline">
                   View Details →
                 </a>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Contact */}
-      <motion.section
+      <section
         id="contact"
         className="py-20 px-6"
-        initial="hidden"
-        whileInView="visible"
-        custom={5}
-        variants={sectionVariants}
       >
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-semibold mb-6">Get In Touch</h2>
+          <h2 className="text-3xl font-semibold mb-6 border-b dark:border-gray-600 border-gray-300 pb-4">
+            Get In Touch
+          </h2>
           <p className="mb-8">{content.contact.prompt}</p>
           <div className="flex justify-center flex-wrap gap-6">
             {/* Email */}
@@ -264,7 +229,7 @@ export default function Portfolio() {
             </a>
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Footer */}
       <footer className="py-6 text-center text-sm text-gray-500 dark:text-gray-400">

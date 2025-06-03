@@ -11,7 +11,7 @@ export default {
     intro: {
         avatar: ava,
         name: 'Taketsuna Ichiyanagi',
-        description: '農工大古宮研究室所属のM1(修士1年)。自然言語処理や視覚情報処理などの学際領域に対し、研究・実装の観点で興味がある。'
+        description: '農工大古宮研究室所属のM1(修士1年)。自然言語処理や視覚情報処理などの学際領域に対し、研究・実装を行なっている。'
     },
     ownedSkills : [
         { icon: <FaCuttlefish />, label: 'C' },
