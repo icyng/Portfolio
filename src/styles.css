@@ -3,3 +3,4 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .wf-mplus1p { font-family: "M PLUS 1p"; }
+.font-mincho { font-family: "Yu Mincho", "游明朝", "Hiragino Mincho ProN", "Noto Serif JP", serif; }
