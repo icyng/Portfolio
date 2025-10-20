@@ -6,12 +6,12 @@ import ava from './assets/ava.png';
 export default {
     hero: {
         name: 'Taketsuna Ichiyanagi',
-        tagline: 'Student / AI Engineer',
+        tagline: 'Student / Data Engineer',
     },
     intro: {
         avatar: ava,
         name: 'Taketsuna Ichiyanagi',
-        description: '2002年5月23日生まれ長野県出身の23歳。現在は農工大古宮研究室所属のM1(修士1年)。自然言語処理や視覚情報処理などの学際領域に対し、研究・実装を行なっている。趣味は麻雀と旅行。'
+        description: '長野県出身、東京都在住の23歳。現在は農工大古宮研究室所属のM1(修士1年)。自然言語処理や視覚情報処理などの学際領域に対し、研究・実装を行なっている。趣味は麻雀と旅行。'
     },
     ownedSkills : [
         { icon: <FaCuttlefish />, label: 'C' },
