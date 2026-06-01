@@ -1,21 +1,49 @@
-import { useEffect, useMemo, useState } from 'react';
+import { createElement, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { MdNightsStay } from 'react-icons/md';
-import { IoSunny } from 'react-icons/io5';
-import { SiWantedly } from 'react-icons/si';
+import { FiMoon, FiSun } from 'react-icons/fi';
 import { FaGithub } from 'react-icons/fa';
 import { LuMail } from 'react-icons/lu';
-import classNames from 'classnames';
 
 import content from './content';
 
+const cx = (...classes) => classes.filter(Boolean).join(' ');
+
+const MotionH1 = motion.h1;
+const MotionP = motion.p;
+const MotionSpan = motion.span;
+
 const SECTION_WRAPPER = 'py-20 px-6';
 const SECTION_TITLE =
-  'text-3xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-4xl font-mincho';
+  'font-serif text-3xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-4xl';
 const CARD_BASE =
-  'rounded-2xl bg-white/85 ring-1 ring-slate-900/10 backdrop-blur-md transition-colors dark:bg-slate-900/60 dark:ring-white/10';
+  'rounded-lg border border-slate-200/80 bg-white/90 backdrop-blur-md transition dark:border-slate-700 dark:bg-slate-900/70';
 const CONTACT_BUTTON =
-  'flex items-center gap-3 rounded-full bg-white/85 px-5 py-3 text-sm font-medium text-slate-900 shadow-sm backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 font-mincho dark:bg-slate-900/55 dark:text-slate-100 dark:hover:bg-slate-900/70 dark:focus-visible:ring-slate-600 dark:focus-visible:ring-offset-slate-950';
+  'inline-flex items-center gap-3 rounded-lg border border-slate-200 bg-white/90 px-5 py-3 font-serif text-sm font-medium text-slate-900 shadow-sm backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 dark:border-slate-800 dark:bg-slate-950/70 dark:text-slate-100 dark:hover:border-slate-700 dark:hover:bg-slate-900 dark:focus-visible:ring-slate-600 dark:focus-visible:ring-offset-slate-950';
+
+const contactActions = [
+  { label: 'Email', href: `mailto:${content.contact.email}`, icon: LuMail },
+  {
+    label: 'GitHub',
+    href: content.contact.github,
+    icon: FaGithub,
+    external: true,
+  },
+];
+
+const heroNameChars = Array.from(content.hero.name);
+const heroTaglineWords = content.hero.tagline.split(' ').filter(Boolean);
+const heroNameOffsets = heroNameChars.map(() => ({
+  x: (Math.random() - 0.5) * 160,
+  y: (Math.random() - 0.5) * 120,
+  rotate: (Math.random() - 0.5) * 50,
+  scale: 0.6 + Math.random() * 0.5,
+}));
+const heroTaglineOffsets = heroTaglineWords.map(() => ({
+  x: (Math.random() - 0.5) * 140,
+  y: (Math.random() - 0.5) * 80,
+  rotate: (Math.random() - 0.5) * 30,
+}));
+
 const heroNameContainer = {
   hidden: {},
   visible: {
@@ -74,15 +102,15 @@ const Section = ({
 }) => (
   <section
     id={id}
-    className={classNames(
+    className={cx(
       SECTION_WRAPPER,
       accent && 'bg-slate-100/80 dark:bg-slate-900/35'
     )}
   >
-    <div className={classNames('mx-auto w-full', containerClassName)}>
+    <div className={cx('mx-auto w-full', containerClassName)}>
       {title ? (
         <>
-          <h2 className={classNames(SECTION_TITLE, titleClassName)}>
+          <h2 className={cx(SECTION_TITLE, titleClassName)}>
             {title}
           </h2>
           <div className="mt-12">{children}</div>
@@ -94,6 +122,27 @@ const Section = ({
   </section>
 );
 
+const IntroDescription = ({ description }) => {
+  if (Array.isArray(description)) {
+    return (
+      <ul className="mt-5 space-y-3 text-left font-serif text-base leading-relaxed text-slate-600 dark:text-slate-300 md:text-lg">
+        {description.map(item => (
+          <li key={item} className="flex gap-3">
+            <span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-teal-500 dark:bg-teal-300" />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  return (
+    <p className="mt-4 font-serif text-base leading-relaxed text-slate-600 dark:text-slate-300 md:text-lg">
+      {description}
+    </p>
+  );
+};
+
 export default function Portfolio() {
   const [darkMode, setDarkMode] = useState(false);
 
@@ -102,102 +151,61 @@ export default function Portfolio() {
     darkMode ? root.classList.add('dark') : root.classList.remove('dark');
   }, [darkMode]);
 
-  const skillGroups = [
-    { title: 'Owned', items: content.ownedSkills },
-    { title: 'Learning', items: content.learningSkills },
-  ];
-
-  const contactActions = [
-    { label: 'Email', href: `mailto:${content.contact.email}`, icon: LuMail },
-    {
-      label: 'Wantedly',
-      href: content.contact.wantedly,
-      icon: SiWantedly,
-      external: true,
-    },
-    {
-      label: 'GitHub',
-      href: content.contact.github,
-      icon: FaGithub,
-      external: true,
-    },
-  ];
-
-  const heroNameChars = Array.from(content.hero.name);
-  const heroTaglineWords = content.hero.tagline.split(' ').filter(Boolean);
-  const heroNameOffsets = useMemo(
-    () =>
-      heroNameChars.map(() => ({
-        x: (Math.random() - 0.5) * 160,
-        y: (Math.random() - 0.5) * 120,
-        rotate: (Math.random() - 0.5) * 50,
-        scale: 0.6 + Math.random() * 0.5,
-      })),
-    [content.hero.name]
-  );
-  const heroTaglineOffsets = useMemo(
-    () =>
-      heroTaglineWords.map(() => ({
-        x: (Math.random() - 0.5) * 140,
-        y: (Math.random() - 0.5) * 80,
-        rotate: (Math.random() - 0.5) * 30,
-      })),
-    [content.hero.tagline]
-  );
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-slate-100 text-slate-950 transition-colors duration-500 dark:from-black dark:via-gray-950 dark:to-gray-900 dark:text-slate-100 wf-mplus1p">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-950 transition-colors duration-500 dark:bg-slate-900 dark:text-slate-100">
+      <img
+        src="/back.png"
+        alt=""
+        className="pointer-events-none fixed inset-0 h-full w-full object-cover opacity-25 dark:opacity-10"
+        aria-hidden="true"
+      />
       <div className="fixed left-4 top-4 z-50">
         <button
           type="button"
           onClick={() => setDarkMode(prev => !prev)}
-          className={classNames(
-            'flex h-10 w-20 items-center rounded-full p-1 shadow-lg transition-colors duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400',
-            darkMode ? 'bg-slate-200' : 'bg-slate-800'
+          className={cx(
+            'flex h-10 w-20 items-center rounded-full border p-1 shadow-lg transition-colors duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400',
+            darkMode ? 'border-slate-700 bg-slate-900' : 'border-slate-300 bg-white'
           )}
           aria-label="Toggle dark mode"
         >
           <span
-            className={classNames(
-              'flex h-8 w-8 transform items-center justify-center rounded-full bg-white text-2xl transition duration-500 dark:bg-black',
-              darkMode ? 'translate-x-10 text-slate-100' : 'translate-x-0 text-yellow-400'
+            className={cx(
+              'flex h-8 w-8 transform items-center justify-center rounded-full border text-xl shadow-sm transition duration-500',
+              darkMode ? 'translate-x-10 border-slate-500 bg-slate-800 text-white' : 'translate-x-0 border-slate-400 bg-slate-100 text-black'
             )}
           >
-            {darkMode ? <MdNightsStay /> : <IoSunny />}
+            {darkMode ? <FiMoon /> : <FiSun />}
           </span>
         </button>
       </div>
 
       <section className="relative flex min-h-screen flex-col items-center justify-center gap-8 px-6 text-center">
-        <div
-          className="pointer-events-none absolute inset-x-0 -top-40 h-80 bg-gradient-to-b from-slate-200/70 to-transparent blur-3xl dark:from-slate-700/30"
-          aria-hidden="true"
-        />
-        <motion.h1
+        <MotionH1
           variants={heroNameContainer}
           initial="hidden"
           animate="visible"
-          className="font-orbitron text-5xl font-bold drop-shadow-sm md:text-6xl"
+          className="text-5xl font-bold tracking-tight drop-shadow-sm md:text-7xl"
         >
           {heroNameChars.map((char, index) => (
-            <motion.span
+            <MotionSpan
               key={`${char}-${index}`}
               variants={heroNameItem}
               custom={heroNameOffsets[index]}
               className="inline-block"
             >
               {char === ' ' ? '\u00A0' : char}
-            </motion.span>
+            </MotionSpan>
           ))}
-        </motion.h1>
-        <motion.p
+        </MotionH1>
+        <MotionP
           variants={heroTaglineContainer}
           initial="hidden"
           animate="visible"
-          className="max-w-2xl text-lg leading-relaxed text-slate-600 font-mincho dark:text-slate-300 md:text-xl md:leading-loose"
+          className="max-w-2xl font-serif text-lg leading-relaxed text-slate-600 dark:text-slate-300 md:text-xl md:leading-loose"
         >
           {heroTaglineWords.map((word, index) => (
-            <motion.span
+            <MotionSpan
               key={`${word}-${index}`}
               variants={heroTaglineItem}
               custom={heroTaglineOffsets[index]}
@@ -205,49 +213,47 @@ export default function Portfolio() {
             >
               {word}
               {index < heroTaglineWords.length - 1 ? '\u00A0' : ''}
-            </motion.span>
+            </MotionSpan>
           ))}
-        </motion.p>
+        </MotionP>
       </section>
 
       <Section id="intro" accent>
-        <div className={classNames('flex flex-col items-center gap-8 p-10 shadow-xl md:flex-row md:items-start', CARD_BASE)}>
+        <div className={cx('flex flex-col items-center gap-8 p-8 md:flex-row md:items-start md:p-10', CARD_BASE)}>
           <img
             src={content.intro.avatar}
             alt="Avatar"
-            className="h-48 w-48 rounded-full ring-4 ring-white/80 shadow-xl dark:ring-slate-800/80 sm:h-56 sm:w-56"
+            className="h-44 w-44 rounded-full border-4 border-white object-cover dark:border-slate-800 sm:h-52 sm:w-52"
           />
           <div className="text-center md:text-left">
-            <h2 className="text-3xl font-semibold tracking-tight text-slate-900 font-mincho dark:text-white">
+            <h2 className="font-serif text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
               {content.intro.name}
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-slate-600 font-mincho dark:text-slate-300 md:text-lg">
-              {content.intro.description}
-            </p>
+            <IntroDescription description={content.intro.description} />
           </div>
         </div>
       </Section>
 
       <Section id="skills" title="Skills">
         <div className="space-y-12">
-          {skillGroups.map(({ title, items }) => (
+          {content.skillGroups.map(({ title, items }) => (
             <div key={title}>
-              <h3 className="text-sm font-semibold text-slate-600 font-mincho dark:text-slate-300">
+              <h3 className="font-serif text-sm font-semibold text-slate-600 dark:text-slate-300">
                 {title}
               </h3>
-              <div className="mt-6 grid gap-6 md:grid-cols-4">
+              <div className="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
                 {items.map(({ icon, label }) => (
                   <div
                     key={label}
-                    className={classNames(
-                      'flex flex-col items-center p-6 text-center shadow-lg transition hover:-translate-y-1 hover:shadow-xl',
+                    className={cx(
+                      'flex min-h-32 flex-col items-center justify-center p-6 text-center hover:border-teal-200 hover:shadow-lg dark:hover:border-teal-900',
                       CARD_BASE
                     )}
                   >
                     <div className="text-5xl text-slate-700 dark:text-slate-200">
                       {icon}
                     </div>
-                    <p className="mt-3 text-base font-medium tracking-tight text-slate-800 font-mincho dark:text-slate-100">
+                    <p className="mt-3 font-serif text-base font-medium tracking-tight text-slate-800 dark:text-slate-100">
                       {label}
                     </p>
                   </div>
@@ -270,16 +276,16 @@ export default function Portfolio() {
           <ul className="flex flex-col gap-10 sm:gap-12">
             {content.career.map(({ period, institution, degree }) => (
               <li key={institution} className="pl-3 sm:pl-6">
-                <div className="flex items-center gap-2 text-xs font-medium tracking-[0.2em] text-slate-500 font-mincho dark:text-slate-400 sm:gap-3 sm:text-sm">
+                <div className="flex items-center gap-2 font-serif text-xs font-medium tracking-[0.2em] text-slate-500 dark:text-slate-400 sm:gap-3 sm:text-sm">
                   <span className="h-px w-3 -ml-3 bg-slate-300/60 dark:bg-slate-700/50 sm:w-6 sm:-ml-6" />
-                  <span className="tracking-wide font-mincho">{period}</span>
+                  <span className="tracking-wide">{period}</span>
                 </div>
-                <div className={classNames('mt-4 p-6 shadow-xl sm:mt-6 sm:p-8', CARD_BASE)}>
+                <div className={cx('mt-4 p-6 hover:border-teal-200 hover:shadow-lg dark:hover:border-teal-900 sm:mt-6 sm:p-8', CARD_BASE)}>
                   <div className="space-y-2.5 text-left">
-                    <h3 className="text-xl font-semibold tracking-tight text-slate-900 font-mincho dark:text-white">
+                    <h3 className="font-serif text-xl font-semibold tracking-tight text-slate-900 dark:text-white">
                       {institution}
                     </h3>
-                    <p className="text-sm leading-relaxed text-slate-500 font-mincho dark:text-slate-400">
+                    <p className="font-serif text-sm leading-relaxed text-slate-500 dark:text-slate-400">
                       {degree}
                     </p>
                   </div>
@@ -298,8 +304,8 @@ export default function Portfolio() {
               href={link}
               target="_blank"
               rel="noopener noreferrer"
-              className={classNames(
-                'group block p-6 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl',
+              className={cx(
+                'group flex min-h-64 flex-col p-6 hover:-translate-y-1 hover:border-teal-200 hover:shadow-lg dark:hover:border-teal-900',
                 CARD_BASE
               )}
             >
@@ -308,13 +314,13 @@ export default function Portfolio() {
                   {period}
                 </div>
               )}
-              <h3 className="mt-3 text-2xl font-semibold text-slate-900 transition group-hover:text-slate-600 dark:text-white">
+              <h3 className="mt-3 font-serif text-2xl font-semibold text-slate-900 transition group-hover:text-teal-700 dark:text-white dark:group-hover:text-teal-200">
                 {title}
               </h3>
-              <p className="mt-4 text-sm leading-relaxed text-slate-600 font-mincho dark:text-slate-300 sm:text-base">
+              <p className="mt-4 font-serif text-sm leading-relaxed text-slate-600 dark:text-slate-300 sm:text-base">
                 {description}
               </p>
-              <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-slate-900 transition group-hover:gap-3 dark:text-slate-200">
+              <span className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-medium text-slate-900 transition group-hover:gap-3 dark:text-slate-200">
                 View Details →
               </span>
             </a>
@@ -328,7 +334,7 @@ export default function Portfolio() {
         accent
         containerClassName="max-w-3xl text-center"
       >
-        <p className="mx-auto mb-12 max-w-2xl text-base leading-relaxed text-slate-600 font-mincho dark:text-slate-300 md:text-lg">
+        <p className="mx-auto mb-12 max-w-2xl font-serif text-base leading-relaxed text-slate-600 dark:text-slate-300 md:text-lg">
           {content.contact.prompt}
         </p>
         <div className="flex flex-wrap justify-center gap-4">
@@ -339,7 +345,7 @@ export default function Portfolio() {
               className={CONTACT_BUTTON}
               {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             >
-              <Icon className="text-xl" />
+              {createElement(Icon, { className: 'text-xl' })}
               {label}
             </a>
           ))}
