@@ -4,5 +4,22 @@
 
 @theme {
   --font-sans: "M PLUS 1p", system-ui, sans-serif;
+  --font-display: "Space Grotesk", "M PLUS 1p", system-ui, sans-serif;
   --font-serif: "Yu Mincho", "游明朝", "Hiragino Mincho ProN", "Noto Serif JP", serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-width: 320px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
