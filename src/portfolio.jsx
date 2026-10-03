@@ -1,4 +1,5 @@
-import { createElement, useEffect, useState } from 'react';
+import { createElement } from 'react';
+import useTheme from './hooks/useTheme';
 import { FiArrowUpRight, FiMoon, FiSun } from 'react-icons/fi';
 import { FaCuttlefish, FaDocker, FaGithub, FaPython, FaReact } from 'react-icons/fa';
 import { LuMail } from 'react-icons/lu';
@@ -40,49 +41,46 @@ const ContactLinks = () => (
   </div>
 );
 
+function Hero() {
+  return (
+    <section id="top" className="hero" aria-labelledby="hero-title">
+      <div className="hero-profile">
+        <div className="hero-identity">
+          <div className="hero-name">
+            <img className="hero-avatar" src={content.intro.avatar} alt={`${content.intro.name}のアバター`} width="88" height="104" />
+            <h1 id="hero-title">{content.site.name}</h1>
+          </div>
+        </div>
+        <div id="intro" className="hero-about" aria-label="About">
+          <dl className="about-details">
+            {content.intro.highlights.map(item => {
+              const [label, ...rest] = item.split('：');
+              const description = rest.join('：');
+              const [institution, ...lab] = description.split(' ');
+              return <div key={item}>
+                <dt>{label}</dt>
+                <dd>
+                  {label === '所属' ? <><span>{institution.replace('大学', '大学 ')}</span><span className="about-secondary">{lab.join(' ')}</span></> : <p>{description}</p>}
+                </dd>
+              </div>;
+            })}
+          </dl>
+          <SkillIcons />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Portfolio() {
-  const [darkMode, setDarkMode] = useState(() => {
-    const savedTheme = window.localStorage.getItem('portfolio-theme');
-    return savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', darkMode);
-    window.localStorage.setItem('portfolio-theme', darkMode ? 'dark' : 'light');
-  }, [darkMode]);
-
+  const { darkMode, toggleTheme } = useTheme();
 
   return (
     <div className="portfolio">
       <a className="skip-link" href="#main">本文へスキップ</a>
 
       <main id="main" className="page-width">
-        <section id="top" className="hero" aria-labelledby="hero-title">
-          <div className="hero-profile">
-            <div className="hero-identity">
-              <div className="hero-name">
-                <img className="hero-avatar" src={content.intro.avatar} alt={`${content.intro.name}のアバター`} width="88" height="104" />
-                <h1 id="hero-title">{content.site.name}</h1>
-              </div>
-            </div>
-            <div id="intro" className="hero-about" aria-label="About">
-              <dl className="about-details">
-                {content.intro.highlights.map(item => {
-                  const [label, ...rest] = item.split('：');
-                  const description = rest.join('：');
-                  const [institution, ...lab] = description.split(' ');
-                  return <div key={item}>
-                    <dt>{label}</dt>
-                    <dd>
-                      {label === '所属' ? <><span>{institution.replace('大学', '大学 ')}</span><span className="about-secondary">{lab.join(' ')}</span></> : <p>{description}</p>}
-                    </dd>
-                  </div>;
-                })}
-              </dl>
-              <SkillIcons />
-            </div>
-          </div>
-        </section>
+        <Hero />
 
         <section id="projects" className="content-section" aria-labelledby="projects-title">
           <div className="section-heading"><h2 id="projects-title" className="section-title">Projects</h2></div>
@@ -119,7 +117,7 @@ export default function Portfolio() {
         <span>© {new Date().getFullYear()} {content.site.name}</span>
         <div className="footer-actions">
           <ContactLinks />
-          <button className="theme-toggle" type="button" onClick={() => setDarkMode(prev => !prev)}
+          <button className="theme-toggle" type="button" onClick={toggleTheme}
             aria-label={darkMode ? 'ライトモードに切り替える' : 'ダークモードに切り替える'} aria-pressed={darkMode}>
             {darkMode ? <FiSun aria-hidden="true" /> : <FiMoon aria-hidden="true" />}
           </button>

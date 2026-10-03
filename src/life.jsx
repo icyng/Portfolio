@@ -1,41 +1,33 @@
-import { useEffect, useState } from 'react';
+import useLifeFeed from './hooks/useLifeFeed';
 import { FiArrowUpRight } from 'react-icons/fi';
 import content from './data/portfolio';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+const MARKDOWN_PLUGINS = [remarkGfm];
+const MarkdownHeading = ({ children }) => <h5>{children}</h5>;
+const MarkdownLink = ({ children, href }) => (
+  <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>
+);
+const MARKDOWN_COMPONENTS = {
+  h1: MarkdownHeading, h2: MarkdownHeading, h3: MarkdownHeading,
+  h4: MarkdownHeading, h5: MarkdownHeading, h6: MarkdownHeading,
+  a: MarkdownLink,
+};
+
+function LifeItem({ item }) {
+  return (
+    <article className="life-item">
+      <h4>{item.url ? <a href={item.url} target="_blank" rel="noopener noreferrer">{item.title}<FiArrowUpRight aria-hidden="true" /></a> : item.title}</h4>
+      {item.body ? <div className="life-body">
+        <Markdown remarkPlugins={MARKDOWN_PLUGINS} components={MARKDOWN_COMPONENTS}>{item.body}</Markdown>
+      </div> : item.bodyUnavailable ? <p className="life-body-empty">本文を取得できませんでした。リンク先で確認できます。</p> : null}
+    </article>
+  );
+}
+
 export default function Life() {
-  const [feed, setFeed] = useState(null);
-  const [state, setState] = useState('loading');
-
-  useEffect(() => {
-    const controller = new AbortController();
-    let fetching = false;
-    async function refresh() {
-      if (fetching || controller.signal.aborted) return;
-      fetching = true;
-      try {
-        const result = await fetch('/api/life', { signal: controller.signal });
-        if (!result.ok) throw new Error('Life unavailable');
-        const data = await result.json();
-        if (!Array.isArray(data.groups) || !data.groups.every(group => typeof group.name === 'string' && Array.isArray(group.items))) {
-          throw new Error('Invalid Life data');
-        }
-        if (controller.signal.aborted) return;
-        setFeed(data);
-        setState('ready');
-      } catch {
-        if (!controller.signal.aborted) setState('error');
-      } finally {
-        fetching = false;
-      }
-    }
-    refresh();
-    const interval = window.setInterval(refresh, 5 * 60 * 1000);
-    return () => { controller.abort(); window.clearInterval(interval); };
-  }, []);
-
-  const groups = feed?.groups.filter(group => !/^done$/i.test(group.name.trim()) && group.items.length) ?? [];
+  const { feed, state, groups } = useLifeFeed();
 
   return (
     <section id="life" className="content-section life-section" aria-labelledby="life-title">
@@ -55,20 +47,7 @@ export default function Life() {
             <div className="life-group" key={group.name}>
               <h3>{group.name}</h3>
               <div className="life-items">{group.items.map(item => (
-                <article className="life-item" key={item.id}>
-                  <h4>{item.url ? <a href={item.url} target="_blank" rel="noopener noreferrer">{item.title}<FiArrowUpRight aria-hidden="true" /></a> : item.title}</h4>
-                  {item.body ? <div className="life-body">
-                    <Markdown remarkPlugins={[remarkGfm]} components={{
-                      h1: ({ children }) => <h5>{children}</h5>,
-                      h2: ({ children }) => <h5>{children}</h5>,
-                      h3: ({ children }) => <h5>{children}</h5>,
-                      h4: ({ children }) => <h5>{children}</h5>,
-                      h5: ({ children }) => <h5>{children}</h5>,
-                      h6: ({ children }) => <h5>{children}</h5>,
-                      a: ({ children, href }) => <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>,
-                    }}>{item.body}</Markdown>
-                  </div> : item.bodyUnavailable ? <p className="life-body-empty">本文を取得できませんでした。リンク先で確認できます。</p> : null}
-                </article>
+                <LifeItem key={item.id} item={item} />
               ))}</div>
             </div>
           ))}
