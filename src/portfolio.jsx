@@ -1,437 +1,130 @@
 import { createElement, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { FiExternalLink, FiMoon, FiSun } from 'react-icons/fi';
-import {
-  FaCuttlefish,
-  FaDocker,
-  FaGithub,
-  FaPython,
-  FaReact,
-} from 'react-icons/fa';
+import { FiArrowUpRight, FiMoon, FiSun } from 'react-icons/fi';
+import { FaCuttlefish, FaDocker, FaGithub, FaPython, FaReact } from 'react-icons/fa';
 import { LuMail } from 'react-icons/lu';
-import {
-  SiGo,
-  SiNumpy,
-  SiPytorch,
-  SiRuby,
-  SiTensorflow,
-} from 'react-icons/si';
+import { SiGo, SiNumpy, SiPytorch, SiRuby, SiTensorflow } from 'react-icons/si';
 import { TbSql } from 'react-icons/tb';
-
 import content from './data/portfolio';
-
-const cx = (...classes) => classes.filter(Boolean).join(' ');
-
-const MotionH1 = motion.h1;
-const MotionP = motion.p;
-const MotionSpan = motion.span;
-
-const SECTION_WRAPPER = 'py-20 px-6';
-const SECTION_TITLE =
-  'font-serif text-3xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-4xl';
-const CARD_BASE =
-  'rounded-lg border border-slate-200/80 bg-white/90 backdrop-blur-md transition dark:border-slate-700 dark:bg-slate-900/70';
-const CONTACT_BUTTON =
-  'inline-flex items-center gap-3 rounded-lg border border-slate-200 bg-white/90 px-5 py-3 font-serif text-sm font-medium text-slate-900 shadow-sm backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 dark:border-slate-800 dark:bg-slate-950/70 dark:text-slate-100 dark:hover:border-slate-700 dark:hover:bg-slate-900 dark:focus-visible:ring-slate-600 dark:focus-visible:ring-offset-slate-950';
+import Life from './life';
 
 const SKILL_ICONS = {
-  c: FaCuttlefish,
-  docker: FaDocker,
-  github: FaGithub,
-  go: SiGo,
-  numpy: SiNumpy,
-  python: FaPython,
-  pytorch: SiPytorch,
-  react: FaReact,
-  ruby: SiRuby,
-  sql: TbSql,
-  tensorflow: SiTensorflow,
+  c: FaCuttlefish, docker: FaDocker, github: FaGithub, go: SiGo,
+  numpy: SiNumpy, python: FaPython, pytorch: SiPytorch,
+  react: FaReact, ruby: SiRuby, sql: TbSql, tensorflow: SiTensorflow,
 };
-
-const ACTION_ICONS = {
-  github: FaGithub,
-  mail: LuMail,
+const SKILL_COLORS = {
+  c: '#536eb3', python: '#3776ab', ruby: '#b83c48', react: '#2586a4',
+  github: '#606977', docker: '#2578bd', numpy: '#4b71a7', pytorch: '#cc573f',
+  tensorflow: '#bb701d', go: '#258b9d', sql: '#8672b1',
 };
-
-const NAV_ITEMS = [
-  { href: '#intro', label: 'About' },
-  { href: '#skills', label: 'Skills' },
-  { href: '#career', label: 'Career' },
-  { href: '#projects', label: 'Projects' },
-  { href: '#contact', label: 'Contact' },
-];
-
-const heroNameChars = Array.from(content.site.name);
-const heroTaglineWords = content.site.tagline.split(' ').filter(Boolean);
-const heroNameOffsets = heroNameChars.map(() => ({
-  x: (Math.random() - 0.5) * 160,
-  y: (Math.random() - 0.5) * 120,
-  rotate: (Math.random() - 0.5) * 50,
-  scale: 0.6 + Math.random() * 0.5,
-}));
-const heroTaglineOffsets = heroTaglineWords.map(() => ({
-  x: (Math.random() - 0.5) * 140,
-  y: (Math.random() - 0.5) * 80,
-  rotate: (Math.random() - 0.5) * 30,
-}));
-
-const heroNameContainer = {
-  hidden: {},
-  visible: {
-    transition: { delayChildren: 0.05, staggerChildren: 0.04 },
-  },
-};
-
-const heroNameItem = {
-  hidden: ({ x, y, rotate, scale }) => ({
-    opacity: 0,
-    x,
-    y,
-    rotate,
-    scale,
-  }),
-  visible: {
-    opacity: 1,
-    x: 0,
-    y: 0,
-    rotate: 0,
-    scale: 1,
-    transition: { duration: 0.7, ease: 'easeOut' },
-  },
-};
-
-const heroTaglineContainer = {
-  hidden: {},
-  visible: {
-    transition: { delayChildren: 0.3, staggerChildren: 0.07 },
-  },
-};
-
-const heroTaglineItem = {
-  hidden: ({ x, y, rotate }) => ({
-    opacity: 0,
-    x,
-    y,
-    rotate,
-  }),
-  visible: {
-    opacity: 1,
-    x: 0,
-    y: 0,
-    rotate: 0,
-    transition: { duration: 0.6, ease: 'easeOut' },
-  },
-};
-
-const Section = ({
-  id,
-  title,
-  accent = false,
-  containerClassName = 'max-w-4xl',
-  titleClassName = 'text-center',
-  children,
-}) => (
-  <section
-    id={id}
-    className={cx(
-      SECTION_WRAPPER,
-      'relative scroll-mt-4',
-      accent && 'bg-slate-100/80 dark:bg-slate-900/35'
-    )}
-  >
-    <div className={cx('mx-auto w-full', containerClassName)}>
-      {title ? (
-        <>
-          <h2 className={cx(SECTION_TITLE, titleClassName)}>
-            {title}
-          </h2>
-          <div className="mt-12">{children}</div>
-        </>
-      ) : (
-        children
-      )}
-    </div>
-  </section>
-);
-
-const IntroHighlights = ({ items }) => (
-  <ul className="mt-5 space-y-3 text-left font-serif text-base leading-relaxed text-slate-600 dark:text-slate-300 md:text-lg">
-    {items.map(item => (
-      <li key={item} className="flex gap-3">
-        <span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-teal-500 dark:bg-teal-300" />
-        <span>{item}</span>
+const ACTION_ICONS = { github: FaGithub, mail: LuMail };
+const SkillIcons = () => (
+  <ul id="skills" className="skill-icons" aria-label="Skills">
+    {content.skillGroups.flatMap(({ id, items }) => items.map(({ id: skillId, icon, label }) => (
+      <li key={skillId} className="skill-icon" style={{ '--skill-color': SKILL_COLORS[icon] }} tabIndex={0} aria-label={`${label}${id === 'learning' ? '（学習中）' : ''}`}>
+        {createElement(SKILL_ICONS[icon], { 'aria-hidden': true })}
+        <span className="skill-tooltip" aria-hidden="true">{label}{id === 'learning' ? ' · Learning' : ''}</span>
       </li>
-    ))}
+    )))}
   </ul>
 );
 
-const ProjectCard = ({ project }) => {
-  const body = (
-    <>
-      <div className="flex items-start justify-between gap-4">
-        <span className="text-sm text-slate-500 dark:text-slate-400">
-          {project.period}
-        </span>
-        {project.status === 'coming-soon' && (
-          <span className="rounded-full border border-slate-300 bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
-            Coming soon
-          </span>
-        )}
-      </div>
-      <h3 className="mt-3 font-serif text-2xl font-semibold text-slate-900 transition group-hover:text-teal-700 dark:text-white dark:group-hover:text-teal-200">
-        {project.title}
-      </h3>
-      <p className="mt-4 font-serif text-sm leading-relaxed text-slate-600 dark:text-slate-300 sm:text-base">
-        {project.description}
-      </p>
-      {project.href && (
-        <span className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-medium text-slate-900 dark:text-slate-200">
-          View details
-          <FiExternalLink aria-hidden="true" />
-        </span>
-      )}
-    </>
-  );
-
-  const className = cx(
-    'group flex min-h-64 flex-col p-6 hover:border-teal-200 hover:shadow-lg dark:hover:border-teal-900',
-    CARD_BASE
-  );
-
-  return project.href ? (
-    <a
-      href={project.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={className}
-    >
-      {body}
-    </a>
-  ) : (
-    <article className={className}>{body}</article>
-  );
-};
+const ContactLinks = () => (
+  <div className="contact-links" aria-label="Contact">
+    {content.contact.actions.map(({ id, label, href, icon, external }) => (
+      <a key={id} href={href} aria-label={label} title={label}
+        {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+        {createElement(ACTION_ICONS[icon], { 'aria-hidden': true })}
+      </a>
+    ))}
+  </div>
+);
 
 export default function Portfolio() {
   const [darkMode, setDarkMode] = useState(() => {
     const savedTheme = window.localStorage.getItem('portfolio-theme');
-    if (savedTheme) return savedTheme === 'dark';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
   useEffect(() => {
-    const root = window.document.documentElement;
-    darkMode ? root.classList.add('dark') : root.classList.remove('dark');
+    document.documentElement.classList.toggle('dark', darkMode);
     window.localStorage.setItem('portfolio-theme', darkMode ? 'dark' : 'light');
   }, [darkMode]);
 
+
   return (
-    <div className="isolate min-h-screen bg-slate-50 font-sans text-slate-950 transition-colors duration-500 dark:bg-slate-900 dark:text-slate-100">
-      <img
-        src="/back.webp"
-        alt=""
-        decoding="async"
-        className="pointer-events-none fixed inset-0 -z-10 h-full w-full object-cover opacity-25 dark:opacity-10"
-        aria-hidden="true"
-      />
-      <div className="fixed right-4 top-4 z-50">
-          <button
-            type="button"
-            onClick={() => setDarkMode(prev => !prev)}
-            className={cx(
-              'flex h-10 w-20 items-center rounded-full border p-1 shadow-sm transition-colors duration-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400',
-              darkMode ? 'border-slate-700 bg-slate-900' : 'border-slate-300 bg-white'
-            )}
-            aria-label={darkMode ? 'ライトモードに切り替える' : 'ダークモードに切り替える'}
-            aria-pressed={darkMode}
-          >
-            <span
-              className={cx(
-                'flex h-8 w-8 transform items-center justify-center rounded-full border text-xl shadow-sm transition duration-500',
-                darkMode ? 'translate-x-10 border-slate-500 bg-slate-800 text-white' : 'translate-x-0 border-slate-400 bg-slate-100 text-black'
-              )}
-            >
-              {darkMode ? <FiMoon /> : <FiSun />}
-            </span>
-          </button>
-      </div>
+    <div className="portfolio">
+      <a className="skip-link" href="#main">本文へスキップ</a>
 
-      <main>
-      <section id="top" className="relative flex min-h-screen flex-col items-center justify-center gap-8 overflow-hidden px-5 text-center sm:px-6">
-        <div className="flex flex-col items-center gap-4 px-5 py-3">
-          <MotionH1
-            variants={heroNameContainer}
-            initial="hidden"
-            animate="visible"
-            className="font-display text-6xl font-semibold leading-none text-slate-950 dark:text-white sm:text-7xl md:text-8xl"
-          >
-              {heroNameChars.map((char, index) => (
-                <MotionSpan
-                  key={`${char}-${index}`}
-                  variants={heroNameItem}
-                  custom={heroNameOffsets[index]}
-                  className="inline-block"
-                >
-                  {char === ' ' ? '\u00A0' : char}
-                </MotionSpan>
-              ))}
-          </MotionH1>
-
-          <MotionP
-            variants={heroTaglineContainer}
-            initial="hidden"
-            animate="visible"
-            className="font-display text-sm font-medium text-slate-600 dark:text-slate-300 md:text-base"
-          >
-            {heroTaglineWords.map((word, index) => (
-              <MotionSpan
-                key={`${word}-${index}`}
-                variants={heroTaglineItem}
-                custom={heroTaglineOffsets[index]}
-                className="inline-block"
-              >
-                {word}
-                {index < heroTaglineWords.length - 1 ? '\u00A0' : ''}
-              </MotionSpan>
-            ))}
-          </MotionP>
-        </div>
-
-          <nav
-            aria-label="Portfolio sections"
-            className="max-w-full overflow-x-auto border-slate-400/80 dark:border-slate-600"
-          >
-            <ul className="flex min-w-max items-center divide-x divide-slate-300 dark:divide-slate-600">
-              {NAV_ITEMS.map(item => (
-                <li key={item.href}>
-                  <a
-                    href={item.href}
-                    className="block whitespace-nowrap px-3 py-3 text-xs font-medium text-slate-600 transition-colors hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-teal-500 dark:text-slate-300 dark:hover:text-white sm:px-4 sm:text-sm"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </section>
-
-      <Section id="intro" accent>
-        <div className={cx('flex flex-col items-center gap-8 p-8 md:flex-row md:items-start md:p-10', CARD_BASE)}>
-          <img
-            src={content.intro.avatar}
-            alt="Avatar"
-            className="h-44 w-44 rounded-full border-4 border-white object-cover dark:border-slate-800 sm:h-52 sm:w-52"
-          />
-          <div className="text-center md:text-left">
-            <h2 className="font-serif text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
-              {content.intro.name}
-            </h2>
-            <IntroHighlights items={content.intro.highlights} />
-          </div>
-        </div>
-      </Section>
-
-      <Section id="skills" title="Skills">
-        <div className="space-y-12">
-          {content.skillGroups.map(({ id, title, items }) => (
-            <div key={id}>
-              <h3 className="font-serif text-sm font-semibold text-slate-600 dark:text-slate-300">
-                {title}
-              </h3>
-              <div className="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
-                {items.map(({ id: skillId, icon, label }) => (
-                  <div
-                    key={skillId}
-                    className={cx(
-                      'flex min-h-32 flex-col items-center justify-center p-6 text-center hover:border-teal-200 hover:shadow-lg dark:hover:border-teal-900',
-                      CARD_BASE
-                    )}
-                  >
-                    <div className="text-5xl text-slate-700 dark:text-slate-200">
-                      {createElement(SKILL_ICONS[icon], { 'aria-hidden': true })}
-                    </div>
-                    <p className="mt-3 font-serif text-base font-medium tracking-tight text-slate-800 dark:text-slate-100">
-                      {label}
-                    </p>
-                  </div>
-                ))}
+      <main id="main" className="page-width">
+        <section id="top" className="hero" aria-labelledby="hero-title">
+          <div className="hero-profile">
+            <div className="hero-identity">
+              <div className="hero-name">
+                <img className="hero-avatar" src={content.intro.avatar} alt={`${content.intro.name}のアバター`} width="88" height="104" />
+                <h1 id="hero-title">{content.site.name}</h1>
               </div>
             </div>
-          ))}
-        </div>
-      </Section>
+            <div id="intro" className="hero-about" aria-label="About">
+              <dl className="about-details">
+                {content.intro.highlights.map(item => {
+                  const [label, ...rest] = item.split('：');
+                  const description = rest.join('：');
+                  const [institution, ...lab] = description.split(' ');
+                  return <div key={item}>
+                    <dt>{label}</dt>
+                    <dd>
+                      {label === '所属' ? <><span>{institution.replace('大学', '大学 ')}</span><span className="about-secondary">{lab.join(' ')}</span></> : <p>{description}</p>}
+                    </dd>
+                  </div>;
+                })}
+              </dl>
+              <SkillIcons />
+            </div>
+          </div>
+        </section>
 
-      <Section
-        id="career"
-        title="Career"
-        accent
-        containerClassName="max-w-5xl"
-        titleClassName="text-left sm:text-center"
-      >
-        <div className="relative pl-4 sm:pl-7">
-          <span className="absolute left-1.5 top-0 bottom-0 w-px bg-slate-300/70 dark:bg-slate-700/60 sm:left-2" />
-          <ul className="flex flex-col gap-10 sm:gap-12">
+        <section id="projects" className="content-section" aria-labelledby="projects-title">
+          <div className="section-heading"><h2 id="projects-title" className="section-title">Projects</h2></div>
+          <div className="project-grid">
+            {content.projects.map(project => {
+              const Tag = project.href ? 'a' : 'article';
+              return <Tag key={project.id} className="project-card"
+                {...(project.href ? { href: project.href, target: '_blank', rel: 'noopener noreferrer' } : {})}>
+                <p className="project-period">{project.period}</p>
+                <div className="project-body">
+                  <h3>{project.title}{project.href && <FiArrowUpRight aria-hidden="true" />}</h3>
+                  <p>{project.description}</p>
+                  {project.status === 'coming-soon' && <span className="project-status">Coming soon</span>}
+                </div>
+              </Tag>;
+            })}
+          </div>
+        </section>
+
+        <section id="career" className="content-section" aria-labelledby="career-title">
+          <div className="section-heading"><h2 id="career-title" className="section-title">Career</h2></div>
+          <ol className="career-list">
             {content.career.map(({ id, period, institution, degree }) => (
-              <li key={id} className="pl-3 sm:pl-6">
-                <div className="flex items-center gap-2 font-serif text-xs font-medium tracking-[0.2em] text-slate-500 dark:text-slate-400 sm:gap-3 sm:text-sm">
-                  <span className="h-px w-3 -ml-3 bg-slate-300/60 dark:bg-slate-700/50 sm:w-6 sm:-ml-6" />
-                  <span className="tracking-wide">{period}</span>
-                </div>
-                <div className={cx('mt-4 p-6 hover:border-teal-200 hover:shadow-lg dark:hover:border-teal-900 sm:mt-6 sm:p-8', CARD_BASE)}>
-                  <div className="space-y-2.5 text-left">
-                    <h3 className="font-serif text-xl font-semibold tracking-tight text-slate-900 dark:text-white">
-                      {institution}
-                    </h3>
-                    <p className="font-serif text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-                      {degree}
-                    </p>
-                  </div>
-                </div>
+              <li key={id} className="career-item"><p className="career-period">{period}</p>
+                <div><h3>{institution}</h3><p className="career-degree">{degree}</p></div>
               </li>
             ))}
-          </ul>
-        </div>
-      </Section>
+          </ol>
+        </section>
 
-      <Section id="projects" title="Projects">
-        <div className="grid gap-6 md:grid-cols-2">
-          {content.projects.map(project => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
-      </Section>
-
-      <Section
-        id="contact"
-        title="Get In Touch"
-        accent
-        containerClassName="max-w-3xl text-center"
-      >
-        <p className="mx-auto mb-12 max-w-2xl font-serif text-base leading-relaxed text-slate-600 dark:text-slate-300 md:text-lg">
-          {content.contact.prompt}
-        </p>
-        <div className="flex flex-wrap justify-center gap-4">
-          {content.contact.actions.map(({ id, label, href, icon, external }) => (
-            <a
-              key={id}
-              href={href}
-              className={CONTACT_BUTTON}
-              {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-            >
-              {createElement(ACTION_ICONS[icon], {
-                className: 'text-xl',
-                'aria-hidden': true,
-              })}
-              {label}
-            </a>
-          ))}
-        </div>
-      </Section>
+        <Life />
       </main>
-
-      <footer className="relative py-6 text-center text-sm text-slate-500 dark:text-slate-400">
-        © {new Date().getFullYear()} {content.site.name}. All rights reserved.
+      <footer className="site-footer page-width">
+        <span>© {new Date().getFullYear()} {content.site.name}</span>
+        <div className="footer-actions">
+          <ContactLinks />
+          <button className="theme-toggle" type="button" onClick={() => setDarkMode(prev => !prev)}
+            aria-label={darkMode ? 'ライトモードに切り替える' : 'ダークモードに切り替える'} aria-pressed={darkMode}>
+            {darkMode ? <FiSun aria-hidden="true" /> : <FiMoon aria-hidden="true" />}
+          </button>
+        </div>
+        <a href="#top">Back to top ↑</a>
       </footer>
     </div>
   );

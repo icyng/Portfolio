@@ -13,8 +13,8 @@ const assertUniqueIds = (items, scope) => {
 };
 
 export const validatePortfolio = data => {
-  if (!data.site?.name || !data.site?.tagline) {
-    throw new Error('Portfolio data: site.name and site.tagline are required.');
+  if (!data.site?.name) {
+    throw new Error('Portfolio data: site.name is required.');
   }
 
   assertUniqueIds(data.skillGroups, 'skillGroups');

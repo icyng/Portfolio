@@ -3,7 +3,9 @@ import { validatePortfolio } from './validatePortfolio';
 const portfolio = validatePortfolio({
   site: {
     name: 'icyng',
-    tagline: 'Data Science / Student',
+  },
+  life: {
+    href: 'https://github.com/users/icyng/projects/10',
   },
   intro: {
     avatar: '/hero.png',
@@ -11,7 +13,6 @@ const portfolio = validatePortfolio({
     highlights: [
       '所属：東京農工大学先進学際科学府 古宮研究室 M2',
       '研究：自然言語処理や視覚情報処理などの学際領域',
-      '開発：mahjong 牌譜データベースの開発・運用',
     ],
   },
   skillGroups: [
@@ -96,7 +97,6 @@ const portfolio = validatePortfolio({
     },
   ],
   contact: {
-    prompt: 'Interested in working together?',
     actions: [
       { id: 'email', label: 'Email', icon: 'mail', href: 'mailto:icyng.sim@gmail.com' },
       { id: 'github', label: 'GitHub', icon: 'github', href: 'https://github.com/icyng', external: true },
