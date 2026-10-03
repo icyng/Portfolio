@@ -4,9 +4,6 @@ const portfolio = validatePortfolio({
   site: {
     name: 'icyng',
   },
-  life: {
-    href: 'https://github.com/users/icyng/projects/10',
-  },
   intro: {
     avatar: '/hero.png',
     name: 'icyng',

@@ -6,7 +6,6 @@ import { LuMail } from 'react-icons/lu';
 import { SiGo, SiNumpy, SiPytorch, SiRuby, SiTensorflow } from 'react-icons/si';
 import { TbSql } from 'react-icons/tb';
 import content from './data/portfolio';
-import Life from './life';
 
 const SKILL_ICONS = {
   c: FaCuttlefish, docker: FaDocker, github: FaGithub, go: SiGo,
@@ -110,8 +109,6 @@ export default function Portfolio() {
             ))}
           </ol>
         </section>
-
-        <Life />
       </main>
       <footer className="site-footer page-width">
         <span>© {new Date().getFullYear()} {content.site.name}</span>
