@@ -17,6 +17,11 @@ const SKILL_COLORS = {
   github: '#606977', docker: '#2578bd', numpy: '#4b71a7', pytorch: '#cc573f',
   tensorflow: '#bb701d', go: '#258b9d', sql: '#8672b1',
 };
+const THEME_OPTIONS = {
+  system: { icon: FiMonitor, label: 'System', next: 'light' },
+  light: { icon: FiSun, label: 'Light', next: 'dark' },
+  dark: { icon: FiMoon, label: 'Dark', next: 'system' },
+};
 const ACTION_ICONS = { github: FaGithub, mail: LuMail };
 const SkillIcons = () => (
   <ul id="skills" className="skill-icons" aria-label="Skills">
@@ -73,6 +78,8 @@ function Hero() {
 
 export default function Portfolio() {
   const { theme, setTheme } = useTheme();
+  const themeOption = THEME_OPTIONS[theme];
+  const themeLabel = `現在: ${themeOption.label}。${THEME_OPTIONS[themeOption.next].label}に切り替える`;
 
   return (
     <div className="portfolio">
@@ -114,14 +121,10 @@ export default function Portfolio() {
         <span>© {new Date().getFullYear()} {content.site.name}</span>
         <div className="footer-actions">
           <ContactLinks />
-          <div className="theme-control">
-            {createElement({ system: FiMonitor, light: FiSun, dark: FiMoon }[theme], { 'aria-hidden': true })}
-            <select className="theme-select" aria-label="表示テーマ" value={theme} onChange={event => setTheme(event.target.value)}>
-              <option value="system">System</option>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-            </select>
-          </div>
+          <button className="theme-toggle" type="button" title={themeLabel} aria-label={themeLabel}
+            onClick={() => setTheme(current => THEME_OPTIONS[current].next)}>
+            {createElement(themeOption.icon, { 'aria-hidden': true })}
+          </button>
         </div>
         <a href="#top">Back to top ↑</a>
       </footer>

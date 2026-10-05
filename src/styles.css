@@ -17,11 +17,9 @@
 .page-width { width: min(1040px, calc(100% - 80px)); margin-inline: auto; }
 .skip-link { position: fixed; top: 12px; left: 12px; z-index: 30; padding: 12px; background: var(--page); transform: translateY(-180%); }
 .skip-link:focus { transform: translateY(0); }
-.contact-links a { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; color: var(--muted); transition: background .2s, color .2s, transform .2s; }
-.theme-control { display: flex; align-items: center; gap: 8px; color: var(--muted); }
-.theme-control > svg { font-size: 18px; flex-shrink: 0; }
-.theme-select { min-height: 40px; cursor: pointer; color: var(--ink); background: var(--page); font: inherit; border: 0; padding: 0 4px; }
-.contact-links a:hover { background: var(--tint); color: var(--accent); transform: translateY(-2px); }
+.theme-toggle, .contact-links a { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; color: var(--muted); transition: background .2s, color .2s, transform .2s; }
+.theme-toggle { cursor: pointer; font-size: 20px; }
+.theme-toggle:hover, .contact-links a:hover { background: var(--tint); color: var(--accent); transform: translateY(-2px); }
 .contact-links { display: flex; gap: 4px; }
 .contact-links svg { font-size: 20px; }
 .hero { padding: var(--section-space) 0; }
