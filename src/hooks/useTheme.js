@@ -1,16 +1,32 @@
 import { useEffect, useState } from 'react';
 
+const THEMES = ['system', 'light', 'dark'];
+
 export default function useTheme() {
-  const [darkMode, setDarkMode] = useState(() => {
-    const savedTheme = window.localStorage.getItem('portfolio-theme');
-    return savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const [theme, setTheme] = useState(() => {
+    try {
+      const savedTheme = window.localStorage.getItem('portfolio-theme');
+      return THEMES.includes(savedTheme) ? savedTheme : 'system';
+    } catch {
+      return 'system';
+    }
   });
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', darkMode);
-    window.localStorage.setItem('portfolio-theme', darkMode ? 'dark' : 'light');
-  }, [darkMode]);
+    const preference = window.matchMedia('(prefers-color-scheme: dark)');
+    const applyTheme = () => {
+      document.documentElement.classList.toggle('dark', theme === 'dark' || (theme === 'system' && preference.matches));
+    };
+    applyTheme();
+    try {
+      window.localStorage.setItem('portfolio-theme', theme);
+    } catch {
+      // Keep theme selection usable when browser storage is unavailable.
+    }
+    if (theme !== 'system') return;
+    preference.addEventListener('change', applyTheme);
+    return () => preference.removeEventListener('change', applyTheme);
+  }, [theme]);
 
-  const toggleTheme = () => setDarkMode(previous => !previous);
-  return { darkMode, toggleTheme };
+  return { theme, setTheme };
 }

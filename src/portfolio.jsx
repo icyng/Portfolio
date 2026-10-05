@@ -1,6 +1,6 @@
 import { createElement } from 'react';
 import useTheme from './hooks/useTheme';
-import { FiArrowUpRight, FiMoon, FiSun } from 'react-icons/fi';
+import { FiArrowUpRight, FiMonitor, FiMoon, FiSun } from 'react-icons/fi';
 import { FaCuttlefish, FaDocker, FaGithub, FaPython, FaReact } from 'react-icons/fa';
 import { LuMail } from 'react-icons/lu';
 import { SiGo, SiNumpy, SiPytorch, SiRuby, SiTensorflow } from 'react-icons/si';
@@ -72,7 +72,7 @@ function Hero() {
 }
 
 export default function Portfolio() {
-  const { darkMode, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   return (
     <div className="portfolio">
@@ -114,10 +114,14 @@ export default function Portfolio() {
         <span>© {new Date().getFullYear()} {content.site.name}</span>
         <div className="footer-actions">
           <ContactLinks />
-          <button className="theme-toggle" type="button" onClick={toggleTheme}
-            aria-label={darkMode ? 'ライトモードに切り替える' : 'ダークモードに切り替える'} aria-pressed={darkMode}>
-            {darkMode ? <FiSun aria-hidden="true" /> : <FiMoon aria-hidden="true" />}
-          </button>
+          <div className="theme-control">
+            {createElement({ system: FiMonitor, light: FiSun, dark: FiMoon }[theme], { 'aria-hidden': true })}
+            <select className="theme-select" aria-label="表示テーマ" value={theme} onChange={event => setTheme(event.target.value)}>
+              <option value="system">System</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
         </div>
         <a href="#top">Back to top ↑</a>
       </footer>
